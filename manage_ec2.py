@@ -25,6 +25,16 @@ class EC2Manager :
         except Exception as e:
             print(f"error in starting the instance : {e}")
 
+        
+    def terminate_instance(self, instance_id):
+
+        try:
+            self.ec2.terminate_instances(InstanceIds = [instance_id])
+            self.ec2.get_waiter('instance_terminated').wait(InstanceIds =[instance_id])
+            print(f"{instance_id} is terminated")
+        except Exception as e:
+            print(f"Termination is failed because of {e}")
+
 
 if __name__ == "__main__":
     ec2_manager = EC2Manager()
@@ -32,4 +42,6 @@ if __name__ == "__main__":
     ec2_manager.stop_instance(instance_id)
     time.sleep(20)
     ec2_manager.start_instace(instance_id)
+    time.sleep(20)
+    ec2_manager.terminate_instance(instance_id)
 
